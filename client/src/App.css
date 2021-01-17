@@ -20,7 +20,6 @@ nav ul {
   list-style: none;
   display: flex;
   background-color: black;
-  margin-bottom: 20px;
 }
 
 nav ul li {
@@ -36,6 +35,27 @@ nav ul li a {
   border-bottom: 4px solid white;
 }
 
-p {
-  margin-bottom: 15px;
+.homeTable {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #eaeaea;
+}
+
+.homeTable thead tr {
+  background-color: #009879;
+  border: 1px solid #009879;
+  color: #ffffff;
+  text-align: left;
+}
+
+.homeTable td, .homeTable th {
+  padding: 10px 10px;
+}
+
+.homeTable tbody tr {
+  border-bottom: 1px solid #eaeaea;
+}
+
+.homeTable tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
 }
