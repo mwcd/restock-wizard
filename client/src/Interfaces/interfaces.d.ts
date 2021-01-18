@@ -1,5 +1,8 @@
+export type GpuType = '3060 Ti' | '3070' | '3080' | '3090' | 'RX 6800' | 'RX 6800 XT' | 'RX 6900 XT'
+
 export interface GpuInfo {
-  name: string
+  name: string, 
+  gpuType: GpuType
   address: string
   price: string
   inStock: boolean

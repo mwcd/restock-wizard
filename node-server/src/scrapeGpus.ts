@@ -1,7 +1,7 @@
 
 import axios, { AxiosRequestConfig } from 'axios'
 import cheerio from 'cheerio'
-import { GpuInfo, GpuStock } from '../interfaces/interfaces'
+import { GpuInfo, GpuStock, GpuType } from '../interfaces/interfaces'
 
 let gpuStock: GpuStock = {
     nvidia3060Ti: [],
@@ -118,13 +118,13 @@ async function getBestBuyGpus(): Promise<GpuStock> {
     const bestBuyRx6800Xt = 'https://www.bestbuy.com/site/computer-cards-components/video-graphics-cards/abcat0507002.c?id=abcat0507002&qp=gpusv_facet%3DGraphics%20Processing%20Unit%20(GPU)~AMD%20Radeon%20RX%206800%20XT'
     const bestBuyRx6900Xt = 'https://www.bestbuy.com/site/computer-cards-components/video-graphics-cards/abcat0507002.c?id=abcat0507002&qp=gpusv_facet%3DGraphics%20Processing%20Unit%20(GPU)~AMD%20Radeon%20RX%206900%20XT'
 
-    const nvidia3060Tis = await getBestBuyGpu(bestBuy3060Ti)
-    const nvidia3070s = await getBestBuyGpu(bestBuy3070)
-    const nvidia3080s = await getBestBuyGpu(bestBuy3080)
-    const nvidia3090s = await getBestBuyGpu(bestBuy3090)
-    const amdRx6800s = await getBestBuyGpu(bestBuyRx6800)
-    const amdRx6800Xts = await getBestBuyGpu(bestBuyRx6800Xt)
-    const amdRx6900Xts = await getBestBuyGpu(bestBuyRx6900Xt)
+    const nvidia3060Tis = await getBestBuyGpu(bestBuy3060Ti, '3060 Ti')
+    const nvidia3070s = await getBestBuyGpu(bestBuy3070, '3070')
+    const nvidia3080s = await getBestBuyGpu(bestBuy3080, '3080')
+    const nvidia3090s = await getBestBuyGpu(bestBuy3090, '3090')
+    const amdRx6800s = await getBestBuyGpu(bestBuyRx6800, 'RX 6800')
+    const amdRx6800Xts = await getBestBuyGpu(bestBuyRx6800Xt, 'RX 6800 XT')
+    const amdRx6900Xts = await getBestBuyGpu(bestBuyRx6900Xt, 'RX 6900 XT')
 
     const gpuStock: GpuStock = {
         nvidia3060Ti: nvidia3060Tis,
@@ -143,9 +143,9 @@ async function getSamsClubGpus(): Promise<GpuStock> {
 
     const samsClubGpus = 'https://www.samsclub.com/b/hard-drives-storage/6890123?clubId=6352&offset=0&rootDimension=pcs_availability%253AOnlinepipsymbProduct%2520Type%253AGraphic%2520Cards&searchCategoryId=6890123&selectedFilter=all&sortKey=relevance&sortOrder=1'
 
-    const nvidia3070s = await getSamsClubGpu(samsClubGpus, "3070")
-    const nvidia3080s = await getSamsClubGpu(samsClubGpus, "3080")
-    const nvidia3090s = await getSamsClubGpu(samsClubGpus, "3090")
+    const nvidia3070s = await getSamsClubGpu(samsClubGpus, '3070', '3070')
+    const nvidia3080s = await getSamsClubGpu(samsClubGpus, '3080', '3080')
+    const nvidia3090s = await getSamsClubGpu(samsClubGpus, '3090', '3090')
 
     const gpuStock: GpuStock = {
         nvidia3060Ti: [],
@@ -169,12 +169,12 @@ async function getNeweggGpus(): Promise<GpuStock> {
     const neweggRx6800Xt = 'https://www.newegg.com/p/pl?N=100007709%20601359422&PageSize=96'
     const neweggRx6900Xt = 'https://www.newegg.com/p/pl?N=100007709%20601359957&PageSize=96'
 
-    const nvidia3060Tis = await getNeweggGpu(newegg3060Ti)
-    const nvidia3070s = await getNeweggGpu(newegg3070)
-    const nvidia3080s = await getNeweggGpu(newegg3080)
-    const nvidia3090s = await getNeweggGpu(newegg3090)
-    const amdRx6800s = await getNeweggGpu(neweggRx6800)
-    const amdRx6800Xts = await getNeweggGpu(neweggRx6800Xt)
+    const nvidia3060Tis = await getNeweggGpu(newegg3060Ti, '3060 Ti')
+    const nvidia3070s = await getNeweggGpu(newegg3070, '3070')
+    const nvidia3080s = await getNeweggGpu(newegg3080, '3080')
+    const nvidia3090s = await getNeweggGpu(newegg3090, '3090')
+    const amdRx6800s = await getNeweggGpu(neweggRx6800, 'RX 6800')
+    const amdRx6800Xts = await getNeweggGpu(neweggRx6800Xt, 'RX 6800 XT')
 
     const gpuStock: GpuStock = {
         nvidia3060Ti: nvidia3060Tis,
@@ -189,7 +189,7 @@ async function getNeweggGpus(): Promise<GpuStock> {
     return gpuStock
 }
 
-async function getBestBuyGpu(url: string): Promise<GpuInfo[]> {
+async function getBestBuyGpu(url: string, gpuType: GpuType): Promise<GpuInfo[]> {
     const res = await axios.get(url)
     const data = res.data
     const $ = cheerio.load(data)
@@ -212,6 +212,7 @@ async function getBestBuyGpu(url: string): Promise<GpuInfo[]> {
 
         const gpu: GpuInfo = {
             name: name,
+            gpuType: gpuType,
             address: address,
             price: createPrice(priceString),
             inStock: itemStatus === 'Add to Cart' || itemStatus === 'Check Stores'
@@ -221,7 +222,7 @@ async function getBestBuyGpu(url: string): Promise<GpuInfo[]> {
     return gpus
 }
 
-async function getSamsClubGpu(url: string, keyword: string): Promise<GpuInfo[]> {
+async function getSamsClubGpu(url: string, keyword: string, gpuType: GpuType): Promise<GpuInfo[]> {
     const res = await axios.get(url)
     const data = res.data
     const $ = cheerio.load(data)
@@ -247,6 +248,7 @@ async function getSamsClubGpu(url: string, keyword: string): Promise<GpuInfo[]> 
 
         const gpu: GpuInfo = {
             name: name,
+            gpuType: gpuType,
             address: address,
             price: createPrice(priceDollars, priceCents),
             inStock: inStock
@@ -257,7 +259,7 @@ async function getSamsClubGpu(url: string, keyword: string): Promise<GpuInfo[]> 
     return gpus
 }
 
-async function getNeweggGpu(url: string): Promise<GpuInfo[]> {
+async function getNeweggGpu(url: string, gpuType: GpuType): Promise<GpuInfo[]> {
     const res = await axios.get(url)
     const data = res.data
     const $ = cheerio.load(data)
@@ -282,6 +284,7 @@ async function getNeweggGpu(url: string): Promise<GpuInfo[]> {
         }
         const gpu: GpuInfo = {
             name: name,
+            gpuType: gpuType,
             address: address || '',
             price: createPrice(priceDollars, priceCents),
             inStock: inStock

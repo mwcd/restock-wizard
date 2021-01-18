@@ -58,7 +58,8 @@ interface HomeTableProps {
 }
 
 function HomeTable({ gpus }: HomeTableProps) {
-  const data = React.useMemo(
+  let data: GpuInfo[]
+  data = React.useMemo(
     () => {
       let homePageGpus: GpuInfo[] = []
       for (let key in gpus) {
@@ -73,6 +74,10 @@ function HomeTable({ gpus }: HomeTableProps) {
 
   const columns = React.useMemo(
     () => [
+      {
+        Header: '',
+        accessor: 'gpuType'
+      },
       {
         Header: 'Product Name',
         accessor: 'name',
