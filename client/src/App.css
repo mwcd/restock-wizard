@@ -35,27 +35,27 @@ nav ul li a {
   border-bottom: 4px solid white;
 }
 
-.homeTable {
+.gpuTable {
   width: 100%;
   border-collapse: collapse;
   border: 1px solid #eaeaea;
 }
 
-.homeTable thead tr {
+.gpuTable thead tr {
   background-color: #009879;
   border: 1px solid #009879;
   color: #ffffff;
   text-align: left;
 }
 
-.homeTable td, .homeTable th {
+.gpuTable td, .gpuTable th {
   padding: 10px 10px;
 }
 
-.homeTable tbody tr {
+.gpuTable tbody tr {
   border-bottom: 1px solid #eaeaea;
 }
 
-.homeTable tbody tr:nth-of-type(even) {
+.gpuTable tbody tr:nth-of-type(even) {
   background-color: #f3f3f3;
 }

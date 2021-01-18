@@ -112,7 +112,7 @@ function HomeTable({ gpus }: HomeTableProps) {
   } = tableInstance
 
   return (
-    <table className='homeTable' {...getTableProps()}>
+    <table className='gpuTable' {...getTableProps()}>
       <thead>
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
