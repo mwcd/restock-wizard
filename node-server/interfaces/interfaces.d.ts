@@ -1,4 +1,4 @@
-export type GpuType = '3060 Ti' | '3070' | '3080' | '3090' | 'RX 6800' | 'RX 6800 XT' | 'RX 6900 XT'
+import { GpuType } from '../src/GpuType'
 
 export interface GpuInfo {
   name: string
@@ -16,4 +16,8 @@ export interface GpuStock {
   amdRx6800: GpuInfo[],
   amdRx6800Xt: GpuInfo[],
   amdRx6900Xt: GpuInfo[],
+}
+
+export interface SingleGpuRecord {
+  [key: string]: GpuInfo[]
 }

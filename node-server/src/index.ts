@@ -1,9 +1,11 @@
 import express from 'express'
-import { updateGpus, getGpus } from './scrapeGpus'
+import { SingleGpuRecord } from '../interfaces/interfaces'
+import { getGpus, getGpusOfType, updateGpus } from './scrapeGpus'
+import { corralGpuType } from './GpuType'
 
 const app = express()
 const port = 8080 // default port to listen
-const REFRESH_SECONDS=600 // how often to update scraped data
+const REFRESH_SECONDS = 600 // how often to update scraped data
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
@@ -15,29 +17,27 @@ app.use((req, res, next) => {
     next()
 })
 
-// define a route handler for the default home page
-app.get( "/", ( req, res ) => {
-    console.log("homepage request received")
-    res.send( "Hello world!" )
-})
-
-
-// define a route handler for the default home page
-app.get( "/gpus", ( req, res ) => {
-    console.log("gpu request received")
+app.get('/gpus', (req, res) => {
+    console.log('gpu request received')
+    const gpuType = corralGpuType(req.query.gpuType)
+    if (gpuType) {
+        var data: SingleGpuRecord = {}
+        data[gpuType] = getGpusOfType(gpuType)
+        res.send(data)
+    }
     res.send({ gpus: getGpus() })
 })
 
 // start loop that scrapes new Gpu Updates
 async function refreshData() {
     const gpus = await updateGpus()
-    console.log("GPUS UPDATED")
+    console.log('GPUS UPDATED')
     setTimeout(refreshData, REFRESH_SECONDS * 1000)
 }
 refreshData()
 
 // start the Express server
-app.listen( port, () => {
-    console.log( `server started at http://localhost:${ port }` )
+app.listen(port, () => {
+    console.log(`server started at http://localhost:${port}`)
 })
 
