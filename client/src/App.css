@@ -52,6 +52,10 @@ nav ul li a {
   padding: 10px 10px;
 }
 
+.gpuTable td.noWrap, .gpuTable th.noWrap {
+  white-space: nowrap;
+}
+
 .gpuTable tbody tr {
   border-bottom: 1px solid #eaeaea;
 }

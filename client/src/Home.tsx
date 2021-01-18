@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { GpuInfo, GpuStock } from './Interfaces/interfaces'
 import { Cell, useTable } from 'react-table'
 import axios from 'axios'
@@ -75,11 +75,11 @@ function HomeTable({ gpus }: HomeTableProps) {
   const columns = React.useMemo(
     () => [
       {
-        Header: '',
-        accessor: 'gpuType'
+        Header: 'Product Name',
+        accessor: 'gpuType',
       },
       {
-        Header: 'Product Name',
+        Header: '',
         accessor: 'name',
       },
       {
@@ -116,13 +116,25 @@ function HomeTable({ gpus }: HomeTableProps) {
       <thead>
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th
-                {...column.getHeaderProps()}
-              >
-                {column.render('Header')}
-              </th>
-            ))}
+            {headerGroup.headers.map(column => {
+              if (column.id === 'gpuType') {
+                return (
+                  <th {...column.getHeaderProps()} colSpan={2} >
+                    {column.render('Header')}
+                  </th>
+                )
+              } else if (column.Header === '') {
+                return (
+                  <Fragment></Fragment>
+                )
+              } else {
+                return (
+                  <th {...column.getHeaderProps()} >
+                    {column.render('Header')}
+                  </th>
+                )
+              }
+            })}
           </tr>
         ))}
       </thead>

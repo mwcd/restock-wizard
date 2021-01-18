@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { GpuInfo, GpuType } from './Interfaces/interfaces'
 import { Cell, useTable } from 'react-table'
 import axios from 'axios'
@@ -62,11 +62,11 @@ function GpuTable({ gpus }: GpuTableProps) {
   const columns = React.useMemo(
     () => [
       {
-        Header: '',
+        Header: 'Product Name',
         accessor: 'gpuType'
       },
       {
-        Header: 'Product Name',
+        Header: '',
         accessor: 'name',
       },
       {
@@ -103,13 +103,28 @@ function GpuTable({ gpus }: GpuTableProps) {
       <thead>
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th
-                {...column.getHeaderProps()}
-              >
-                {column.render('Header')}
-              </th>
-            ))}
+            {headerGroup.headers.map(column => {
+              if (column.Header === 'Product Name') {
+                return (
+                  <th {...column.getHeaderProps()} colSpan={2}
+                  >
+                    {column.render('Header')}
+                  </th>
+                )
+              } else if (column.Header === '') {
+                return (
+                  <Fragment></Fragment>
+                )
+              } else {
+                return (
+                  <th
+                    {...column.getHeaderProps()}
+                  >
+                    {column.render('Header')}
+                  </th>
+                )
+              }
+            })}
           </tr>
         ))}
       </thead>
@@ -119,13 +134,19 @@ function GpuTable({ gpus }: GpuTableProps) {
           return (
             <tr {...row.getRowProps()}>
               {row.cells.map(cell => {
-                return (
-                  <td
-                    {...cell.getCellProps()}
-                  >
-                    {cell.render('Cell')}
-                  </td>
-                )
+                if (cell.column.id === 'name') {
+                  return (
+                    <td {...cell.getCellProps()} >
+                      {cell.render('Cell')}
+                    </td>
+                  )
+                } else {
+                  return (
+                    <td {...cell.getCellProps()} className='noWrap' >
+                      {cell.render('Cell')}
+                    </td>
+                  )
+                }
               })}
             </tr>
           )
