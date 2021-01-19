@@ -115,9 +115,9 @@ function sortGpus(gpus: GpuStock): GpuStock {
 function compareGpuPrices(a: GpuInfo, b: GpuInfo): number {
     const priceA = Number(a.price.substring(1))
     const priceB = Number(b.price.substring(1))
-    if (priceA < 0) {
+    if (priceA <= 0) {
         return 1
-    } else if (priceB < 0) {
+    } else if (priceB <= 0) {
         return -1
     } else {
         return priceA - priceB
@@ -314,8 +314,8 @@ async function getNeweggGpu(url: string, gpuType: GpuType): Promise<GpuInfo[]> {
             priceDollars = priceBlock.find('.price-current').children('strong').text()
             priceCents = priceBlock.find('.price-current').children('sup').text()
         } else {
-            priceDollars = '-1'
-            priceCents = '0'
+            priceDollars = ''
+            priceCents = ''
         }
         const gpu: GpuInfo = {
             name: name,
@@ -341,9 +341,11 @@ function createPrice(dollars: number | string, cents?: number | string): string 
     // For now, remove commas and dollar signs
     const dollarsStringSanitized = dollars.toString().replace('$', '').replace(',', '')
     const dollarsNum = Number(dollarsStringSanitized)
+    if (dollarsNum === 0) {
+        return ''
+    }
     cents = cents || 0
     const priceNum = dollarsNum + (Number(cents) / 100)
-
     const price = '$' + Number(priceNum).toFixed(2)
     return price
 }
