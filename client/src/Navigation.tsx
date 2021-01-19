@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { NavLink } from 'react-router-dom'
 
 export default function Navigation() {
@@ -6,6 +6,7 @@ export default function Navigation() {
   return (
     <nav>
       <ul>
+        <li><NavLink exact className='title' to='/'>Restock-Wizard</NavLink></li>
         <li><NavLink exact activeClassName="current" to='/3060Ti'>3060 Ti</NavLink></li>
         <li><NavLink exact activeClassName="current" to='/3070'>3070</NavLink></li>
         <li><NavLink exact activeClassName="current" to='/3080'>3080</NavLink></li>

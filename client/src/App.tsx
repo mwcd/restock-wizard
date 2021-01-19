@@ -7,11 +7,10 @@ function App() {
 
   return (
     <div className='app'>
-      <h1>
-      <NavLink className='title' exact to='/'>Restock-Wizard</NavLink>
-      </h1>
-      <Navigation />
-      <Main />
+      <div className='body'>
+        <Navigation />
+        <Main />
+      </div>
     </div>
   );
 }
