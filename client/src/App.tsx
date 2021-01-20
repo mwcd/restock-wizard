@@ -107,10 +107,6 @@ function App() {
         </Switch>
       </div>
     </Router>
-    // <div>
-    //   <Navigation />
-    //   <Main />
-    // </div>
   )
 }
 
