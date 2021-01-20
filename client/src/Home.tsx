@@ -1,8 +1,7 @@
-import React, { Fragment, useEffect, useState } from 'react'
-import { GpuInfo, GpuStock } from './Interfaces/interfaces'
+import React, { useEffect, useState } from 'react'
+import { GpuStock } from './Interfaces/interfaces'
 import axios from 'axios'
-import { makeStyles } from '@material-ui/core/styles'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@material-ui/core'
+import GpuTable from './GpuTable'
 
 export default function Home() {
 
@@ -42,76 +41,24 @@ export default function Home() {
       <Loading />
     );
   } else {
+    const displayGpus = [
+        gpus.nvidia3060Ti[0],
+        gpus.nvidia3070[0],
+        gpus.nvidia3080[0],
+        gpus.nvidia3090[0],
+        gpus.amdRx6800[0],
+        gpus.amdRx6800Xt[0],
+        gpus.amdRx6900Xt[0]
+      ]
+
     return (
-      <HomeTable gpus={gpus} />
-    );
+      <GpuTable gpus={displayGpus} />
+    )
   }
 }
 
 function Loading() {
   return (
     <div>Loading...</div>
-  )
-}
-
-interface HomeTableProps {
-  gpus: GpuStock
-}
-
-function HomeTable({ gpus }: HomeTableProps) {
-
-  const useStyles = makeStyles({
-    table: {
-      minWidth: 650,
-    },
-    noWrap: {
-      whiteSpace: 'nowrap',
-    }
-  })
-  const classes = useStyles()
-
-  function formatData(gpus: GpuStock): GpuInfo[] {
-    return [
-      gpus.nvidia3060Ti[0],
-      gpus.nvidia3070[0],
-      gpus.nvidia3080[0],
-      gpus.nvidia3090[0],
-      gpus.amdRx6800[0],
-      gpus.amdRx6800Xt[0],
-      gpus.amdRx6900Xt[0]
-    ]
-  }
-  const rows = formatData(gpus)
-
-
-  return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label='simple table'>
-        <TableHead>
-          <TableRow>
-            <TableCell>Product Name</TableCell>
-            <TableCell></TableCell>
-            <TableCell>Availability</TableCell>
-            <TableCell>Price</TableCell>
-            <TableCell>Link</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.name}>
-              <TableCell className={classes.noWrap} component='th' scope='row'>
-                {row.gpuType}
-              </TableCell>
-              <TableCell align='right'>{row.name}</TableCell>
-              <TableCell align='right'>{row.inStock ? 'available' : 'unavailable'}</TableCell>
-              <TableCell align='right'>{row.price}</TableCell>
-              <TableCell align='right'>
-                <a className={classes.noWrap} target="_blank" rel="noopener noreferrer" href={row.address}>View &rarr;</a>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
   )
 }
