@@ -1,7 +1,8 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import { GpuInfo, GpuStock } from './Interfaces/interfaces'
-import { Cell, useTable } from 'react-table'
 import axios from 'axios'
+import { makeStyles } from '@material-ui/core/styles'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@material-ui/core'
 
 export default function Home() {
 
@@ -58,104 +59,59 @@ interface HomeTableProps {
 }
 
 function HomeTable({ gpus }: HomeTableProps) {
-  let data: GpuInfo[]
-  data = React.useMemo(
-    () => {
-      let homePageGpus: GpuInfo[] = []
-      for (let key in gpus) {
-        if (gpus.hasOwnProperty(key)) {
-          homePageGpus.push((gpus as any)[key][0])
-        }
-      }
-      return homePageGpus
+
+  const useStyles = makeStyles({
+    table: {
+      minWidth: 650,
     },
-    [gpus]
-  )
+    noWrap: {
+      whiteSpace: 'nowrap',
+    }
+  })
+  const classes = useStyles()
 
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: 'Product Name',
-        accessor: 'gpuType',
-      },
-      {
-        Header: '',
-        accessor: 'name',
-      },
-      {
-        Header: 'Availability',
-        accessor: 'inStock',
-        Cell: (cell: Cell) => cell.value ? 'Available' : 'Unavailable'
-      },
-      {
-        Header: 'Price',
-        accessor: 'price',
-      },
-      {
-        Header: 'Link',
-        accessor: 'address',
-        Cell: (cell: Cell) => <a target="_blank" rel="noopener noreferrer" href={cell.value}>
-          View &rarr;</a>
-      },
-    ],
-    []
-  )
-  // @ts-ignore
-  const tableInstance = useTable({ columns, data })
+  function formatData(gpus: GpuStock): GpuInfo[] {
+    return [
+      gpus.nvidia3060Ti[0],
+      gpus.nvidia3070[0],
+      gpus.nvidia3080[0],
+      gpus.nvidia3090[0],
+      gpus.amdRx6800[0],
+      gpus.amdRx6800Xt[0],
+      gpus.amdRx6900Xt[0]
+    ]
+  }
+  const rows = formatData(gpus)
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = tableInstance
 
   return (
-    <table className='gpuTable' {...getTableProps()}>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => {
-              if (column.id === 'gpuType') {
-                return (
-                  <th {...column.getHeaderProps()} colSpan={2} >
-                    {column.render('Header')}
-                  </th>
-                )
-              } else if (column.Header === '') {
-                return (
-                  <Fragment></Fragment>
-                )
-              } else {
-                return (
-                  <th {...column.getHeaderProps()} >
-                    {column.render('Header')}
-                  </th>
-                )
-              }
-            })}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map(row => {
-          prepareRow(row)
-          return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map(cell => {
-                return (
-                  <td
-                    {...cell.getCellProps()}
-                  >
-                    {cell.render('Cell')}
-                  </td>
-                )
-              })}
-            </tr>
-          )
-        })}
-      </tbody>
-    </table>
+    <TableContainer component={Paper}>
+      <Table className={classes.table} aria-label='simple table'>
+        <TableHead>
+          <TableRow>
+            <TableCell>Product Name</TableCell>
+            <TableCell></TableCell>
+            <TableCell>Availability</TableCell>
+            <TableCell>Price</TableCell>
+            <TableCell>Link</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.map((row) => (
+            <TableRow key={row.name}>
+              <TableCell className={classes.noWrap} component='th' scope='row'>
+                {row.gpuType}
+              </TableCell>
+              <TableCell align='right'>{row.name}</TableCell>
+              <TableCell align='right'>{row.inStock ? 'available' : 'unavailable'}</TableCell>
+              <TableCell align='right'>{row.price}</TableCell>
+              <TableCell align='right'>
+                <a className={classes.noWrap} target="_blank" rel="noopener noreferrer" href={row.address}>View &rarr;</a>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   )
 }

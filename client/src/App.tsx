@@ -4,7 +4,7 @@ import React from 'react';
 import './App.css'
 import { makeStyles } from '@material-ui/core/styles'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
-import { Drawer, List, ListItem, ListItemIcon, ListItemText, Container, Typography, Divider } from '@material-ui/core';
+import { Drawer, List, ListItem, ListItemText, Divider } from '@material-ui/core';
 import Home from './Home';
 import Gpu from './Gpu';
 
