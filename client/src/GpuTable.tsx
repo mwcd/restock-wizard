@@ -1,7 +1,7 @@
 import React from 'react'
 import { GpuInfo } from './Interfaces/interfaces'
 import { makeStyles } from '@material-ui/core/styles'
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@material-ui/core'
+import { Link, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Paper } from '@material-ui/core'
 
 interface props {
   gpus: GpuInfo[]
@@ -41,7 +41,9 @@ export default function GpuTable({ gpus }: props) {
               <TableCell align='right'>{gpu.inStock ? 'available' : 'unavailable'}</TableCell>
               <TableCell align='right'>{gpu.price}</TableCell>
               <TableCell align='right'>
-                <a className={classes.noWrap} target="_blank" rel="noopener noreferrer" href={gpu.address}>View &rarr;</a>
+                <Typography>
+                  <Link className={classes.noWrap} target="_blank" rel="noopener noreferrer" href={gpu.address}>View &rarr;</Link>
+                </Typography>
               </TableCell>
             </TableRow>
           ))}
