@@ -1,25 +1,30 @@
 import React, { useState } from 'react';
 // import Navigation from './Navigation'
 // import Main from './Main'
-import './App.css'
 import { makeStyles } from '@material-ui/core/styles'
 import { BrowserRouter as Router, Switch, Route, Link, useLocation } from 'react-router-dom'
-import { Drawer, List, ListItem, ListItemText, Divider } from '@material-ui/core';
+import { AppBar, Drawer, List, ListItem, ListItemText, Divider, Grid } from '@material-ui/core';
 import Home from './Home';
 import Gpu from './Gpu';
 
 const useStyles = makeStyles((theme) => ({
-  title: {
-    fontSize: '1.6em',
+  active: {
+    backgroudColor: theme.palette.action.selected
+  },
+  body: {
+    display: 'flex',
   },
   drawerPaper: { width: 'inherit' },
   link: {
     textDecoration: 'none',
     color: theme.palette.text.primary
   },
-  active: {
-    backgroudColor: theme.palette.action.selected
-  }
+  list: {
+    padding: 0,
+  },
+  title: {
+    fontSize: theme.typography.h5.fontSize,
+  },
 }))
 
 function App() {
@@ -28,7 +33,7 @@ function App() {
   const classes = useStyles()
   return (
     <Router>
-      <div className='body'>
+      <div className={classes.body}>
         <Drawer
           //TODO: How do I put this somewhere else?
           style={{ width: '220px' }}
@@ -37,7 +42,7 @@ function App() {
           open={true}
           classes={{ paper: classes.drawerPaper }}
         >
-          <List>
+          <List className={classes.list}>
             <Link to='/' className={classes.link}>
               <ListItem button onClick={() => setCurrTable('/')} selected={currTable === '/'}>
                 <ListItemText
