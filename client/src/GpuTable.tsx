@@ -33,7 +33,7 @@ export default function GpuTable({ gpus }: props) {
         </TableHead>
         <TableBody>
           {gpus.map((gpu) => (
-            <TableRow key={gpu.name}>
+            <TableRow key={gpu.address}>
               <TableCell className={classes.noWrap} component='th' scope='row'>
                 {gpu.gpuType}
               </TableCell>

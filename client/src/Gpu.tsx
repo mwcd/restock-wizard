@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { GpuInfo, GpuType } from './Interfaces/interfaces'
 import axios from 'axios'
 import GpuTable from './GpuTable'

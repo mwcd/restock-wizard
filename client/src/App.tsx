@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 // import Navigation from './Navigation'
 // import Main from './Main'
 import './App.css'
 import { makeStyles } from '@material-ui/core/styles'
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route, Link, useLocation } from 'react-router-dom'
 import { Drawer, List, ListItem, ListItemText, Divider } from '@material-ui/core';
 import Home from './Home';
 import Gpu from './Gpu';
@@ -16,12 +16,16 @@ const useStyles = makeStyles((theme) => ({
   link: {
     textDecoration: 'none',
     color: theme.palette.text.primary
+  },
+  active: {
+    backgroudColor: theme.palette.action.selected
   }
 }))
 
 function App() {
-  const classes = useStyles()
+  const [currTable, setCurrTable] = useState(useLocation().pathname)
 
+  const classes = useStyles()
   return (
     <Router>
       <div className='body'>
@@ -35,7 +39,7 @@ function App() {
         >
           <List>
             <Link to='/' className={classes.link}>
-              <ListItem button>
+              <ListItem button onClick={() => setCurrTable('/')} selected={currTable === '/'}>
                 <ListItemText
                   classes={{ primary: classes.title }}
                   primary={'Restock Wizard'} />
@@ -43,37 +47,37 @@ function App() {
             </Link>
             <Divider />
             <Link to='/3060Ti' className={classes.link}>
-              <ListItem button>
+              <ListItem button onClick={() => setCurrTable('/3060Ti')} selected={currTable === '/3060Ti'}>
                 <ListItemText primary={'3060 Ti'} />
               </ListItem>
             </Link>
             <Link to='/3070' className={classes.link}>
-              <ListItem button>
+              <ListItem button onClick={() => setCurrTable('/3070')} selected={currTable === '/3070'}>
                 <ListItemText primary={'3070'} />
               </ListItem>
             </Link>
             <Link to='/3080' className={classes.link}>
-              <ListItem button>
+              <ListItem button onClick={() => setCurrTable('/3080')} selected={currTable === '/3080'}>
                 <ListItemText primary={'3080'} />
               </ListItem>
             </Link>
             <Link to='/3090' className={classes.link}>
-              <ListItem button>
+              <ListItem button onClick={() => setCurrTable('/3090')} selected={currTable === '/3090'}>
                 <ListItemText primary={'3090'} />
               </ListItem>
             </Link>
             <Link to='/RX6800' className={classes.link}>
-              <ListItem button>
+              <ListItem button onClick={() => setCurrTable('/RX6800')} selected={currTable === '/RX6800'}>
                 <ListItemText primary={'RX 6800'} />
               </ListItem>
             </Link>
             <Link to='/RX6800XT' className={classes.link}>
-              <ListItem button>
+              <ListItem button onClick={() => setCurrTable('/RX6800XT')} selected={currTable === '/RX6800XT'}>
                 <ListItemText primary={'RX 6800 XT'} />
               </ListItem>
             </Link>
             <Link to='/RX6900XT' className={classes.link}>
-              <ListItem button>
+              <ListItem button onClick={() => setCurrTable('/RX6900XT')} selected={currTable === '/RX6900XT'}>
                 <ListItemText primary={'RX 6900 XT'} />
               </ListItem>
             </Link>
