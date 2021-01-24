@@ -5,7 +5,7 @@ import { corralGpuType } from './GpuType'
 
 const app = express()
 const port = 8080 // default port to listen
-const REFRESH_SECONDS = 600 // how often to update scraped data
+const REFRESH_SECONDS = 60 // how often to update scraped data
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
@@ -24,8 +24,9 @@ app.get('/gpus', (req, res) => {
         var data: SingleGpuRecord = {}
         data[gpuType] = getGpusOfType(gpuType)
         res.send(data)
+    } else {
+        res.send({ gpus: getGpus() })
     }
-    res.send({ gpus: getGpus() })
 })
 
 // start loop that scrapes new Gpu Updates
