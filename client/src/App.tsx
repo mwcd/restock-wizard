@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 // import Main from './Main'
 import { makeStyles } from '@material-ui/core/styles'
 import { BrowserRouter as Router, Switch, Route, Link, useLocation } from 'react-router-dom'
-import { AppBar, Drawer, List, ListItem, ListItemText, Divider, Grid } from '@material-ui/core';
+import { Drawer, List, ListItem, ListItemText, Divider, Box } from '@material-ui/core';
 import Home from './Home';
 import Gpu from './Gpu';
 
@@ -25,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
   title: {
     fontSize: theme.typography.h5.fontSize,
   },
+  titleBox: {
+    backgroundColor: theme.palette.primary.dark,
+  }
 }))
 
 function App() {
@@ -43,13 +46,15 @@ function App() {
           classes={{ paper: classes.drawerPaper }}
         >
           <List className={classes.list}>
-            <Link to='/' className={classes.link}>
-              <ListItem button onClick={() => setCurrTable('/')} selected={currTable === '/'}>
-                <ListItemText
-                  classes={{ primary: classes.title }}
-                  primary={'Restock Wizard'} />
-              </ListItem>
-            </Link>
+            <Box className={classes.titleBox}>
+              <Link to='/' className={classes.link}>
+                <ListItem button onClick={() => setCurrTable('/')}>
+                  <ListItemText
+                    classes={{ primary: classes.title }}
+                    primary={'Restock Wizard'} />
+                </ListItem>
+              </Link>
+            </Box>
             <Divider />
             <Link to='/3060Ti' className={classes.link}>
               <ListItem button onClick={() => setCurrTable('/3060Ti')} selected={currTable === '/3060Ti'}>

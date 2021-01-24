@@ -1,7 +1,8 @@
 import React from 'react'
 import { GpuInfo } from './Interfaces/interfaces'
-import { makeStyles } from '@material-ui/core/styles'
-import { Link, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Paper, Container } from '@material-ui/core'
+import { createStyles, Theme, makeStyles, withStyles } from '@material-ui/core/styles'
+import { Link, Table, TableBody, TableCell, TableHead, TableRow, Typography, Paper, Container } from '@material-ui/core'
+
 
 interface props {
   gpus: GpuInfo[]
@@ -14,9 +15,29 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
     margin: "auto",
     minWidth: 650,
-    maxWidth: 1200
   },
 }))
+
+
+const StyledTableCell = withStyles((theme: Theme) =>
+  createStyles({
+    head: {
+      backgroundColor: theme.palette.primary.dark,
+      color: theme.palette.common.white,
+    },
+  }),
+)(TableCell);
+
+const StyledTableRow = withStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      '&:nth-of-type(even)': {
+        backgroundColor: theme.palette.action.hover,
+      },
+    },
+  }),
+)(TableRow);
+
 export default function GpuTable({ gpus }: props) {
   const classes = useStyles()
 
@@ -26,25 +47,25 @@ export default function GpuTable({ gpus }: props) {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell colSpan={2}>Product Name</TableCell>
-              <TableCell>Availability</TableCell>
-              <TableCell>Price</TableCell>
-              <TableCell>Link</TableCell>
+              <StyledTableCell colSpan={2}>Product Name</StyledTableCell>
+              <StyledTableCell>Availability</StyledTableCell>
+              <StyledTableCell>Price</StyledTableCell>
+              <StyledTableCell>Link</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {gpus.map((gpu) => (
-              <TableRow key={gpu.address}>
-                <TableCell component='th' scope='row'>
+              <StyledTableRow key={gpu.address}>
+                <StyledTableCell component='th' scope='row'>
                   <Typography variant='body2' noWrap>{gpu.gpuType}</Typography>
-                </TableCell>
-                <TableCell align='right'>{gpu.name}</TableCell>
-                <TableCell align='right'>{gpu.inStock ? 'available' : 'unavailable'}</TableCell>
-                <TableCell align='right'>{gpu.price}</TableCell>
-                <TableCell align='right'>
-                  <Link noWrap target="_blank" rel="noopener noreferrer" href={gpu.address}>View &rarr;</Link>
-                </TableCell>
-              </TableRow>
+                </StyledTableCell>
+                <StyledTableCell align='right'>{gpu.name}</StyledTableCell>
+                <StyledTableCell align='right'>{gpu.inStock ? 'available' : 'unavailable'}</StyledTableCell>
+                <StyledTableCell align='right'>{gpu.price}</StyledTableCell>
+                <StyledTableCell align='right'>
+                  <Link noWrap color='textPrimary' target="_blank" rel="noopener noreferrer" href={gpu.address}>View &rarr;</Link>
+                </StyledTableCell>
+              </StyledTableRow>
             ))}
           </TableBody>
         </Table>
