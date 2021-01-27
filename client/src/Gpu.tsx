@@ -16,7 +16,7 @@ export default function Gpu({ gpuType }: props) {
 
 
   useEffect(() => {
-    axios.get('http://localhost:8080/gpus?gpuType=' + gpuType)
+    axios.get(process.env.REACT_APP_API_IP + ':4000/gpus?gpuType=' + gpuType)
       .then(
         result => {
           setGpus(result.data[gpuType])
