@@ -38,8 +38,11 @@ export function getGpusInStock(gpus: GpuStock): GpuStock {
 export async function updateGpus(): Promise<GpuStock> {
     console.log("in updateGpus")
     let gpus = await getBestBuyGpus()
+    console.log("got best buy gpus")
     append(gpus, await getSamsClubGpus())
+    console.log("got sams club gpus")
     append(gpus, await getNeweggGpus())
+    console.log("got newegg gpus")
     gpuStock = sortGpus(gpus)
     return gpuStock
 }
