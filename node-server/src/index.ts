@@ -31,6 +31,7 @@ app.get('/gpus', (req, res) => {
 
 // start loop that scrapes new Gpu Updates
 async function refreshData() {
+    console.log('UPDATING GPUS')
     const gpus = await updateGpus()
     console.log('GPUS UPDATED')
     setTimeout(refreshData, REFRESH_SECONDS * 1000)
