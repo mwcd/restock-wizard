@@ -4,7 +4,7 @@ import { getGpus, getGpusOfType, updateGpus } from './scrapeGpus'
 import { corralGpuType } from './GpuType'
 
 const app = express()
-const port = 4000 // default port to listen
+const port = process.env.PORT || 4000 // default port to listen
 const REFRESH_SECONDS = 60 // how often to update scraped data
 
 app.use((req, res, next) => {
