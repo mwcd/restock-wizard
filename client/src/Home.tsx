@@ -21,7 +21,7 @@ export default function Home() {
 
 
   useEffect(() => {
-    axios.get(process.env.REACT_APP_API_URL + '/gpus')
+    axios.get('https://restock-wizard-api.herokuapp.com/gpus')
       .then(
         result => {
           setGpus(result.data.gpus)
