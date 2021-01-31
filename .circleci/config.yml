@@ -6,3 +6,5 @@ workflows:
     jobs:
       - heroku/deploy-via-git:
           app-name: restock-wizard-api
+      - heroku/deploy-via-git:
+          app-name: restock-wizard

@@ -36,13 +36,9 @@ export function getGpusInStock(gpus: GpuStock): GpuStock {
  * Updates the list of gpus sold by vendors
  */
 export async function updateGpus(): Promise<GpuStock> {
-    console.log("in updateGpus")
     let gpus = await getBestBuyGpus()
-    console.log("got best buy gpus")
     append(gpus, await getSamsClubGpus())
-    console.log("got sams club gpus")
     append(gpus, await getNeweggGpus())
-    console.log("got newegg gpus")
     gpuStock = sortGpus(gpus)
     return gpuStock
 }
@@ -149,7 +145,6 @@ function append(gpus: GpuStock, addtlGpus: GpuStock): GpuStock {
 
 
 async function getBestBuyGpus(): Promise<GpuStock> {
-    console.log("in getBestBuyGpus")
     const bestBuy3060Ti = 'https://www.bestbuy.com/site/computer-cards-components/video-graphics-cards/abcat0507002.c?id=abcat0507002&qp=gpusv_facet%3DGraphics%20Processing%20Unit%20(GPU)~NVIDIA%20GeForce%20RTX%203060%20Ti'
     const bestBuy3070 = 'https://www.bestbuy.com/site/computer-cards-components/video-graphics-cards/abcat0507002.c?id=abcat0507002&qp=gpusv_facet%3DGraphics%20Processing%20Unit%20(GPU)~NVIDIA%20GeForce%20RTX%203070'
     const bestBuy3080 = 'https://www.bestbuy.com/site/computer-cards-components/video-graphics-cards/abcat0507002.c?id=abcat0507002&qp=gpusv_facet%3DGraphics%20Processing%20Unit%20(GPU)~NVIDIA%20GeForce%20RTX%203080'
