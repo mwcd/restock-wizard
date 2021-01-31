@@ -225,7 +225,9 @@ async function getNeweggGpus(): Promise<GpuStock> {
 }
 
 async function getBestBuyGpu(url: string, gpuType: GpuType): Promise<GpuInfo[]> {
+    console.log("in getBestBuyGpu")
     const res = await axios.get(url)
+    console.log("url received")
     const data = res.data
     const $ = cheerio.load(data)
     let gpus: GpuInfo[] = new Array()
