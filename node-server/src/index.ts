@@ -8,7 +8,7 @@ const port = process.env.PORT || 4000 // default port to listen
 const REFRESH_SECONDS = 60 // how often to update scraped data
 
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'https://restock-wizard.herokuapp.com/')
+    res.header('Access-Control-Allow-Origin', 'https://restock-wizard.herokuapp.com')
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization')
     if (req.method === 'OPTIONS') {
         res.header('Access-Control-Allow-Methos', 'PUT, POST, PATCH, DELETE, GET')
