@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { GpuStock } from './Interfaces/interfaces'
+import { GpuInfo, GpuStock } from './Interfaces/interfaces'
 import axios from 'axios'
 import GpuTable from './GpuTable'
+
 
 export default function Home() {
 
@@ -41,15 +42,7 @@ export default function Home() {
       <Loading />
     );
   } else {
-    const displayGpus = [
-        gpus.nvidia3060Ti[0],
-        gpus.nvidia3070[0],
-        gpus.nvidia3080[0],
-        gpus.nvidia3090[0],
-        gpus.amdRx6800[0],
-        gpus.amdRx6800Xt[0],
-        gpus.amdRx6900Xt[0]
-      ]
+    const displayGpus = filterDisplayGpus(gpus)
 
     return (
       <GpuTable gpus={displayGpus} />
@@ -61,4 +54,38 @@ function Loading() {
   return (
     <div>Loading...</div>
   )
+}
+
+/**
+ * Selects the first (cheapest) GPU of each type for display, as long as one exists.
+ * One should always exist, except when the server has just been started and no data has
+ * yet been fetched, but either way this prevents anything nasty like an NPE
+ * @param gpus GpuStock from which to select gpus for front page display
+ */
+function filterDisplayGpus(gpus: GpuStock): GpuInfo[] {
+  let displayGpus: GpuInfo[] = []
+
+  if (gpus.nvidia3060Ti.length > 0) {
+    displayGpus.push(gpus.nvidia3060Ti[0])
+  }
+  if (gpus.nvidia3070.length > 0) {
+    displayGpus.push(gpus.nvidia3070[0])
+  }
+  if (gpus.nvidia3080.length > 0) {
+    displayGpus.push(gpus.nvidia3080[0])
+  }
+  if (gpus.nvidia3090.length > 0) {
+    displayGpus.push(gpus.nvidia3090[0])
+  }
+  if (gpus.amdRx6800.length > 0) {
+    displayGpus.push(gpus.amdRx6800[0])
+  }
+  if (gpus.amdRx6800Xt.length > 0) {
+    displayGpus.push(gpus.amdRx6800Xt[0])
+  }
+  if (gpus.amdRx6900Xt.length > 0) {
+    displayGpus.push(gpus.amdRx6900Xt[0])
+  }
+
+  return displayGpus
 }
