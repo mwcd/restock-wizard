@@ -21,7 +21,7 @@ export default function Home() {
 
 
   useEffect(() => {
-    axios.get(process.env.REACT_APP_API_IP + ':4000/gpus')
+    axios.get(process.env.REACT_APP_API_URL + '/gpus')
       .then(
         result => {
           setGpus(result.data.gpus)
