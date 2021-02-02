@@ -1,7 +1,8 @@
 
 import axios from 'axios'
+import axiosRetry from 'axios-retry'
 import cheerio from 'cheerio'
-import { GpuInfo, GpuStock } from '../interfaces/interfaces'
+import { BestBuyProduct, GpuInfo, GpuStock } from '../interfaces/interfaces'
 import { GpuType } from './GpuType'
 
 let gpuStock: GpuStock = {
@@ -36,8 +37,8 @@ export function getGpusInStock(gpus: GpuStock): GpuStock {
  * Updates the list of gpus sold by vendors
  */
 export async function updateGpus(): Promise<GpuStock> {
-    // let gpus = await getBestBuyGpus()
-    let gpus = await getSamsClubGpus()
+    let gpus = await getBestBuyGpus()
+    append(gpus, await getSamsClubGpus())
     append(gpus, await getNeweggGpus())
     gpuStock = sortGpus(gpus)
     return gpuStock
@@ -113,8 +114,8 @@ function sortGpus(gpus: GpuStock): GpuStock {
  * @param b GpuInfo to be compared
  */
 function compareGpuPrices(a: GpuInfo, b: GpuInfo): number {
-    const priceA = Number(a.price.substring(1))
-    const priceB = Number(b.price.substring(1))
+    const priceA = Number(a.price)
+    const priceB = Number(b.price)
     if (priceA <= 0) {
         return 1
     } else if (priceB <= 0) {
@@ -142,16 +143,18 @@ function append(gpus: GpuStock, addtlGpus: GpuStock): GpuStock {
     return gpus
 }
 
-
+function sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 async function getBestBuyGpus(): Promise<GpuStock> {
-    const bestBuy3060Ti = 'https://www.bestbuy.com/site/computer-cards-components/video-graphics-cards/abcat0507002.c?id=abcat0507002&qp=gpusv_facet%3DGraphics%20Processing%20Unit%20(GPU)~NVIDIA%20GeForce%20RTX%203060%20Ti'
-    const bestBuy3070 = 'https://www.bestbuy.com/site/computer-cards-components/video-graphics-cards/abcat0507002.c?id=abcat0507002&qp=gpusv_facet%3DGraphics%20Processing%20Unit%20(GPU)~NVIDIA%20GeForce%20RTX%203070'
-    const bestBuy3080 = 'https://www.bestbuy.com/site/computer-cards-components/video-graphics-cards/abcat0507002.c?id=abcat0507002&qp=gpusv_facet%3DGraphics%20Processing%20Unit%20(GPU)~NVIDIA%20GeForce%20RTX%203080'
-    const bestBuy3090 = 'https://www.bestbuy.com/site/computer-cards-components/video-graphics-cards/abcat0507002.c?id=abcat0507002&qp=gpusv_facet%3DGraphics%20Processing%20Unit%20(GPU)~NVIDIA%20GeForce%20RTX%203090'
-    const bestBuyRx6800 = 'https://www.bestbuy.com/site/computer-cards-components/video-graphics-cards/abcat0507002.c?id=abcat0507002&qp=gpusv_facet%3DGraphics%20Processing%20Unit%20(GPU)~AMD%20Radeon%20RX%206800'
-    const bestBuyRx6800Xt = 'https://www.bestbuy.com/site/computer-cards-components/video-graphics-cards/abcat0507002.c?id=abcat0507002&qp=gpusv_facet%3DGraphics%20Processing%20Unit%20(GPU)~AMD%20Radeon%20RX%206800%20XT'
-    const bestBuyRx6900Xt = 'https://www.bestbuy.com/site/computer-cards-components/video-graphics-cards/abcat0507002.c?id=abcat0507002&qp=gpusv_facet%3DGraphics%20Processing%20Unit%20(GPU)~AMD%20Radeon%20RX%206900%20XT'
+    const bestBuy3060Ti = 'https://api.bestbuy.com/v1/products(categoryPath.id=abcat0507002&name=3060 ti*)?show=name,url,salePrice,onlineAvailability&format=json&apiKey=' + process.env.BESTBUY_API_KEY
+    const bestBuy3070 = 'https://api.bestbuy.com/v1/products(categoryPath.id=abcat0507002&name=3070*)?show=name,url,salePrice,onlineAvailability&format=json&apiKey=' + process.env.BESTBUY_API_KEY
+    const bestBuy3080 = 'https://api.bestbuy.com/v1/products(categoryPath.id=abcat0507002&name=3080*)?show=name,url,salePrice,onlineAvailability&format=json&apiKey=' + process.env.BESTBUY_API_KEY
+    const bestBuy3090 = 'https://api.bestbuy.com/v1/products(categoryPath.id=abcat0507002&name=3090*)?show=name,url,salePrice,onlineAvailability&format=json&apiKey=' + process.env.BESTBUY_API_KEY
+    const bestBuyRx6800 = 'https://api.bestbuy.com/v1/products(categoryPath.id=abcat0507002&name=6800*)?show=name,url,salePrice,onlineAvailability&format=json&apiKey=' + process.env.BESTBUY_API_KEY
+    const bestBuyRx6800Xt = 'https://api.bestbuy.com/v1/products(categoryPath.id=abcat0507002&name=6800 xt*)?show=name,url,salePrice,onlineAvailability&format=json&apiKey=' + process.env.BESTBUY_API_KEY
+    const bestBuyRx6900Xt = 'https://api.bestbuy.com/v1/products(categoryPath.id=abcat0507002&name=6900 xt*)?show=name,url,salePrice,onlineAvailability&format=json&apiKey=' + process.env.BESTBUY_API_KEY
 
     const nvidia3060Tis = await getBestBuyGpu(bestBuy3060Ti, '3060 Ti')
     const nvidia3070s = await getBestBuyGpu(bestBuy3070, '3070')
@@ -225,37 +228,37 @@ async function getNeweggGpus(): Promise<GpuStock> {
 }
 
 async function getBestBuyGpu(url: string, gpuType: GpuType): Promise<GpuInfo[]> {
-    console.log("in getBestBuyGpu")
-    const res = await axios.get(url)
-    console.log("url received")
-    const data = res.data
-    const $ = cheerio.load(data)
+    axiosRetry(axios, {
+        retries: 5,
+        retryDelay: axiosRetry.exponentialDelay,
+        retryCondition: error => error.response?.status === 403
+    })
+
+    let pageNum: number = 1
+    let totalPages: number
+    let gpuResponses: any[] = new Array()
+
+    do {
+        const res = await axios.get(url + '&page=' + pageNum)
+        const data = res.data
+        totalPages = data.totalPages
+        data.products.forEach((product: BestBuyProduct) => { gpuResponses.push(product) })
+        pageNum++
+    } while (pageNum <= totalPages)
+
     let gpus: GpuInfo[] = new Array()
-    $('.list-item.lv').each(function (this: cheerio.Element, index, element) {
-        const infoBlock = $(this).children('.right-column').children('.information')
-        const priceBlock = $(this).children('.right-column').children('.price-block')
-
-        const link = infoBlock.find('.sku-header').children('a')
-        const name = link.text()
-        const addressPrefix = 'https://www.bestbuy.com'
-        const address = addressPrefix + link.attr('href')
-
-        const itemStatus = priceBlock.find('.add-to-cart-button').text()
-        const priceScript = priceBlock.find('.sku-list-item-price .None script').last().toString()
-        const priceStringIndex = priceScript.search('currentPrice')
-        let priceString = priceScript.substring(priceStringIndex)
-        // currentPrice\":999.99 -> 999.99
-        priceString = priceString.substring(15, priceString.indexOf(','))
-
+    gpuResponses.forEach(product => {
         const gpu: GpuInfo = {
-            name: name,
+            name: product.name,
             gpuType: gpuType,
-            address: address,
-            price: createPrice(priceString),
-            inStock: itemStatus === 'Add to Cart' || itemStatus === 'Check Stores'
+            address: product.url,
+            price: product.salePrice,
+            inStock: product.onlineAvailability
         }
+
         gpus.push(gpu)
     })
+
     return gpus
 }
 
@@ -348,6 +351,6 @@ function createPrice(dollars: number | string, cents?: number | string): string 
     }
     cents = cents || 0
     const priceNum = dollarsNum + (Number(cents) / 100)
-    const price = '$' + Number(priceNum).toFixed(2)
+    const price = Number(priceNum).toFixed(2)
     return price
 }

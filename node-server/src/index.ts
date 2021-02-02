@@ -3,6 +3,7 @@ import { SingleGpuRecord } from '../interfaces/interfaces'
 import { getGpus, getGpusOfType, updateGpus } from './scrapeGpus'
 import { corralGpuType } from './GpuType'
 
+require('dotenv').config()
 const app = express()
 const port = process.env.PORT || 4000 // default port to listen
 const REFRESH_SECONDS = 60 // how often to update scraped data
