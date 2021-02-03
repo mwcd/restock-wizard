@@ -160,7 +160,13 @@ async function getBestBuyGpus(): Promise<GpuStock> {
     const nvidia3070s = await getBestBuyGpu(bestBuy3070, '3070')
     const nvidia3080s = await getBestBuyGpu(bestBuy3080, '3080')
     const nvidia3090s = await getBestBuyGpu(bestBuy3090, '3090')
-    const amdRx6800s = await getBestBuyGpu(bestBuyRx6800, 'RX 6800')
+    const tempAmdRx6800s = await getBestBuyGpu(bestBuyRx6800, 'RX 6800')
+    const amdRx6800s: GpuInfo[] = []
+    tempAmdRx6800s.forEach(gpu => { //No easy way to separate 6800 from 6800 XT in api call
+        if (!gpu.name.toUpperCase().includes("RX 6800 XT")) {
+            amdRx6800s.push(gpu)
+        }
+    })
     const amdRx6800Xts = await getBestBuyGpu(bestBuyRx6800Xt, 'RX 6800 XT')
     const amdRx6900Xts = await getBestBuyGpu(bestBuyRx6900Xt, 'RX 6900 XT')
 
