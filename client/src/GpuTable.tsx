@@ -1,7 +1,7 @@
 import React from 'react'
 import { GpuInfo } from './Interfaces/interfaces'
 import { createStyles, Theme, makeStyles, withStyles } from '@material-ui/core/styles'
-import { Link, Table, TableBody, TableCell, TableHead, TableRow, Typography, Paper, Container, Button } from '@material-ui/core'
+import { Table, TableBody, TableCell, TableHead, TableRow, Typography, Paper, Container, Button } from '@material-ui/core'
 
 
 interface props {

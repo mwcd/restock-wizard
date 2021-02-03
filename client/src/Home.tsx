@@ -20,9 +20,11 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false)
   const [gpus, setGpus] = useState(emptyGpuStock)
 
+  const apiUrl = process.env.REACT_APP_API_URL || 'https://restock-wizard-api.herokuapp.com'
+  console.log(apiUrl)
 
   useEffect(() => {
-    axios.get('https://restock-wizard-api.herokuapp.com/gpus')
+    axios.get(apiUrl + '/gpus')
       .then(
         result => {
           setGpus(result.data.gpus)
@@ -33,7 +35,7 @@ export default function Home() {
           setError(error)
         }
       )
-  }, [])
+  }, [apiUrl])
 
   if (error.isError) {
     return <div>Error: {error.errorBody}</div>;

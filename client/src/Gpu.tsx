@@ -14,9 +14,10 @@ export default function Gpu({ gpuType }: props) {
   const [isLoaded, setIsLoaded] = useState(false)
   const [gpus, setGpus] = useState(emptyGpuStock)
 
+  const apiUrl = process.env.REACT_APP_API_URL || 'https://restock-wizard-api.herokuapp.com'
 
   useEffect(() => {
-    axios.get('https://restock-wizard-api.herokuapp.com/gpus?gpuType=' + gpuType)
+    axios.get(apiUrl + '/gpus?gpuType=' + gpuType)
       .then(
         result => {
           setGpus(result.data[gpuType])
@@ -27,7 +28,7 @@ export default function Gpu({ gpuType }: props) {
           setError(error)
         }
       )
-  }, [gpuType])
+  }, [gpuType, apiUrl])
 
   if (error.isError) {
     return <div>Error: {error.errorBody}</div>;
