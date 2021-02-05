@@ -29,7 +29,10 @@ app.get('/gpus', (req, res) => {
     }
 })
 
-// start loop that scrapes new Gpu Updates
+// start loop that scrapes new Gpu Updates.
+// NOTE: our database update strategy relies on only one instance of 
+// updateGpus() running at a time, as database updates are not atomic.
+// Hence, the await on updateGpus(). 
 async function refreshData() {
     console.log('UPDATING GPUS')
     const gpus = await updateGpus()

@@ -21,3 +21,7 @@ export interface GpuStock {
 export interface SingleGpuRecord {
   [key: string]: GpuInfo[]
 }
+
+export interface DataVersion {
+  dataversion: number
+}

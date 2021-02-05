@@ -3,6 +3,7 @@ import axios from 'axios'
 import cheerio from 'cheerio'
 import { GpuInfo, GpuStock } from '../interfaces/interfaces'
 import { GpuType } from './GpuType'
+import { insertGpusInDb } from './database'
 
 let gpuStock: GpuStock = {
     nvidia3060Ti: [],
@@ -40,6 +41,7 @@ export async function updateGpus(): Promise<GpuStock> {
     let gpus = await getSamsClubGpus()
     append(gpus, await getNeweggGpus())
     gpuStock = sortGpus(gpus)
+    insertGpusInDb(gpuStock)
     return gpuStock
 }
 
