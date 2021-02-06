@@ -25,3 +25,12 @@ export interface SingleGpuRecord {
 export interface DataVersion {
   dataversion: number
 }
+
+export interface GpuTableRecord {
+  name: string
+  gputype: GpuType
+  address: string
+  price: string //Should this be number?
+  instock: boolean
+  dataversion: number
+}

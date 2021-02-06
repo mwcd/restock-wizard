@@ -3,17 +3,7 @@ import axios from 'axios'
 import cheerio from 'cheerio'
 import { GpuInfo, GpuStock } from '../interfaces/interfaces'
 import { GpuType } from './GpuType'
-import { insertGpusInDb } from './database'
-
-let gpuStock: GpuStock = {
-    nvidia3060Ti: [],
-    nvidia3070: [],
-    nvidia3080: [],
-    nvidia3090: [],
-    amdRx6800: [],
-    amdRx6800Xt: [],
-    amdRx6900Xt: []
-}
+import { fetchGpus, insertGpus } from './database'
 
 /**
  * Filter a set of Gpus and return only those currently in stock, maintaining sort order
@@ -40,52 +30,10 @@ export async function updateGpus(): Promise<GpuStock> {
     // let gpus = await getBestBuyGpus()
     let gpus = await getSamsClubGpus()
     append(gpus, await getNeweggGpus())
-    gpuStock = sortGpus(gpus)
-    insertGpusInDb(gpuStock)
-    return gpuStock
+    sortGpus(gpus)
+    insertGpus(gpus)
+    return gpus
 }
-
-/**
- * Gets the list of gpus sold by vendors. They come sorted by availability and price
- */
-export function getGpus(): GpuStock {
-    return gpuStock
-}
-
-/**
- * Gets the list of a specific gpu type sold by vendors
- * @param gpuType The specific type of Gpus to return
- */
-export function getGpusOfType(gpuType: GpuType): GpuInfo[] {
-    switch (gpuType) {
-        case '3060 Ti': {
-            return gpuStock.nvidia3060Ti
-        }
-        case '3070': {
-            return gpuStock.nvidia3070
-        }
-        case '3080': {
-            return gpuStock.nvidia3080
-        }
-        case '3090': {
-            return gpuStock.nvidia3090
-        }
-        case 'RX 6800': {
-            return gpuStock.amdRx6800
-        }
-        case 'RX 6800 XT': {
-            return gpuStock.amdRx6800Xt
-        }
-        case 'RX 6900 XT': {
-            return gpuStock.amdRx6900Xt
-        }
-        default: {
-            console.error("Error: Incorrect value recieved: " + gpuType)
-            return []
-        }
-    }
-}
-
 
 /**
  * Sorts a set of gpus by ascending price

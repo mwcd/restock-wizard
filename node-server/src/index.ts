@@ -1,7 +1,8 @@
 import express from 'express'
 import { SingleGpuRecord } from '../interfaces/interfaces'
-import { getGpus, getGpusOfType, updateGpus } from './scrapeGpus'
+import { updateGpus } from './scrapeGpus'
 import { corralGpuType } from './GpuType'
+import { fetchGpus, fetchGpusOfType } from './database'
 
 const app = express()
 const port = process.env.PORT || 4000 // default port to listen
@@ -22,10 +23,10 @@ app.get('/gpus', (req, res) => {
     const gpuType = corralGpuType(req.query.gpuType)
     if (gpuType) {
         var data: SingleGpuRecord = {}
-        data[gpuType] = getGpusOfType(gpuType)
+        data[gpuType] = fetchGpusOfType(gpuType)
         res.send(data)
     } else {
-        res.send({ gpus: getGpus() })
+        res.send({ gpus: fetchGpus() })
     }
 })
 
