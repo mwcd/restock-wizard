@@ -104,7 +104,6 @@ async function insertGpusInTable(client: Client, gpus: GpuStock, dataVersion: nu
 }
 
 async function updateDataVersion(client: Client, dataVersion: number) {
-  dataVersion++
   // Only 1 row in table so no WHERE clause
   let query = 'UPDATE dataversion SET dataversion = ' + dataVersion
   const res = await client.query(query)
